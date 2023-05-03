@@ -16,4 +16,8 @@
 
 ### DAY3
 - How to use Export & Function
-- Build to NOde Express environment
+- Build to Node Express environment
+  - Express-generator set-up:  ```npm i -g express-generator```
+  - Create Node Express project: ```express express-"project-name" --view=ejs```
+  - Move to project directory after set-up Node package: ```npm i```
+  - Npm start: ```npm start```
