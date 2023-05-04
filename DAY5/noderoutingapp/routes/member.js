@@ -47,6 +47,11 @@ router.post('/regist', function(req, res){
 
 });
 
+// 가입회원 목록 웹페이지 요청 및 응답 처리 라우팅 메소드 
+router.get('/list', function(req, res){
+    res.render('member/list');
+});
+
 // 2. 회원 로그인 웹페이지 요청과 응답처리 라우팅 메소드
 // ocalhost:3000/members/login
 router.get('/login', function(req, res){
@@ -55,15 +60,84 @@ router.get('/login', function(req, res){
     res.render('member/login');
 });
 
-// 3. 로그인 후 보여줄 사용자 프로필 웹페이지 요청과 응답처리 라우팅 메소드
-// ocalhost:3000/members/profile
+// 3. 로그인 후 보여줄 사용자 프로필 웹페이지 요청과 응답처리 라우팅 메소드 - 쿼리스트링방식
+// localhost:3000/members/profile?uid=1&test=테스트
 router.get('/profile', function(req, res){
 
+    // req.query라는 속성을 통해 url내 쿼리스트링방식으로 전달되는 키의 값을 추출함.
+    var userId = req.query.uid;
+    var test = req.query.test;
+
     // res 객체는 웹서버에서 웹브라우저로 전달할 기능을 정의 
-    res.render('member/profile');
+
+    // res.render('뷰파일의경로')
+    // res.render('뷰파일의경로', '뷰파일에 전달할 JSON 데이터객체')
+    res.render('member/profile', {uid:userId, userName:"Gilbert", email:"test@test.co.kr"});
+
 });
 
 
+// 로그인 후 보여줄 사용자 프로필 웹페이지 요청 및 응답처리 라우팅 메소드 정의 - 파라미터 방식
+// localhost:3000/members/profile/1
+// 파리미터 방식으로 url을 통해 데이터가 전달되는 경우 와일드 카드를 정의해서 데이터를 추출 
+// 와일드 카드란 주소 체계안에 /: 키명을 정의하는 방식을 말함.
+router.get('/profile/:uid', function(req, res){
+
+    // 와일드 카드에 정의된 키갑으로 url에 전달된 1이란 값을 추출
+    // 파라미터 방식으로 값이 전달되면 req.params라는 속성에 와일드카드 키명으로 값을 추출 
+    var uid = req.params.uid;
+    var userName = "Gilbert";
+    var email = "gib@test.co.kr";
+
+    res.render('member/profile', {uid,userName,email});
+
+});
+
+
+// 단일 회원정보 데이터 요청과 응답을 처리하는 REST API 라우팅 메소드 정의 
+// localhost:3000/members/data/profile/?uid=1
+router.get('/data/profile', function(req, res){
+
+    var uid = req.query.uid;
+
+    // DB에서 uid 기준으로 조회해 온 단일 사용자 JSON 데이터
+    var userData = {
+        uid: uid,
+        userName: "Gilber",
+        email: "gib@tesg.co.kr",
+    };
+
+    // DB에서 가져온 userData를 클라이언트에게 응답 결과물로 제공함.
+    res.json(userData);
+
+});
+
+// 모든 회원목록 데이터 요청과 응답을 처리하는 REST API 라우팅 메소드 정의 
+// localhost:3000/members/data/users/all
+router.get('/data/users/all', function(req, res){
+
+    // DB에서 ORM 통해 전체 회원 데이터를 조회
+    var userList = [
+        {
+            uid: 1,
+            userName: "Gilber",
+            email: "gib@tesg.co.kr",
+        },
+        {
+            uid: 2,
+            userName: "Kisung",
+            email: "kks@tesg.co.kr",
+        },
+        {
+            uid: 3,
+            userName: "Jjoco",
+            email: "jjoco@tesg.co.kr",
+        }
+    ];
+
+    res.json(userList);
+    
+});
 
 // Router file은 해당 Router file에 정의된 router를 외부로 반환
 module.exports = router;

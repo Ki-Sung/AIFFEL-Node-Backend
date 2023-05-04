@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>회원목록 페이지</title>
+        <style>
+            table {
+                    width: 100%;
+                    border: 1px solid #444444;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid #444444;
+                }
+        </style>
+    </head>
+
+    <body>
+        <h1>회원 목록 페이지</h1>
+
+        <table>
+            <tr>
+                <!-- url 호출주소체계내에 데이터를 포함시켜서 전달하는 두 가진 방식 
+
+                1) 쿼리 스트링 방식 - 주소?key=value&key=value&...
+                e.g) https://view.shoppinglive.naver.com/lives/958035?tr=lim&fm=shoppinglive&sn=home -->
+
+                <!-- 여기서는 쿼리스트링 방식으로 url 호출주소내에 데이터를 포함시켜 프로필 페이지를 요청  -->
+                <td><a href="/members/profile?uid=1">1</a></td>
+                <td>test@test.co.kr</td>
+                <td>Kisung</td>
+            </tr>
+            <tr>
+
+                <!-- 2) 파라미터 방식으로 데이터를 전달하는 방식 
+                e.g) https://naver.com/articles/1000 -->
+
+                <!-- 여기서는 파라미터방식으로 url 호출주소내에 데이터를 포함시켜 프로필 페이지를 요청 -->
+                <td><a href="/members/profile/2">2</a></td>
+                <td>test2@test.co.kr</td>
+                <td>Gilbert</td>
+            </tr>
+        </table>
+
+    </body>
+</html>
