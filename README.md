@@ -21,3 +21,7 @@
   - Create Node Express project: ```express express-"project-name" --view=ejs```
   - Move to project directory after set-up Node package: ```npm i```
   - Npm start: ```npm start```
+
+### DAY4
+- How to use MVC Design Pattern 
+- How to use Controller(Routing)
