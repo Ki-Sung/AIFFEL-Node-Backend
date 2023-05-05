@@ -4,6 +4,12 @@
 -  ```Npm version - 9.5.1```
 - ```Nvm version - 0.39.0```
 
+#### Follow build Node Express environment
+-  ```npm i -g express-generator``` -> Set up once
+-  ```express express-"project-name" --view=ejs```
+- ```npm i```
+- ```npm start```
+
 ## Study Summary 
 ### DAY1 
 - Build to development environment.
@@ -17,10 +23,10 @@
 ### DAY3
 - How to use Export & Function
 - Build to Node Express environment
-  - Express-generator set-up:  ```npm i -g express-generator```
-  - Create Node Express project: ```express express-"project-name" --view=ejs```
-  - Move to project directory after set-up Node package: ```npm i```
-  - Npm start: ```npm start```
+  - Express-generator set-up 
+  - Create Node Express project
+  - Move to project directory after set-up Node package
+  - Npm start
 
 ### DAY4
 - How to use MVC Design Pattern 
