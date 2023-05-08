@@ -31,3 +31,8 @@
 ### DAY4
 - How to use MVC Design Pattern 
 - How to use Controller(Routing)
+
+### DAY5
+- How to make REST API
+- How to use JQuery for Front-end
+  - [Using jQuery with a CDN](https://jquery.com/download/) -> Goole CDN -> copy to 3.x snippet src
