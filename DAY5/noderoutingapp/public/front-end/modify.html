@@ -1,0 +1,80 @@
+<html>
+
+    <body>
+        <h1>기존 게시글 정보 확인 및 수정 Front-end 웹페이지</h1>
+
+        제목:<input type="text"  id="title" placeholder="제목을 입력해주세요." value="" /><br>
+        내용:<textarea rows="20" id="contents" clos="10" style="width:400px"></textarea><br>
+        게시여부:<select id="display_yn">
+            <option value="Y">게시</option>
+            <option value="N">게시안함</option>
+        </select><br>
+        <hr>
+        <input type="button" value="수정" id="btnSave"/>
+    
+    <!-- jQuery 대입  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script>
+
+        $.urlParam = function(name){
+            //자바스크립트 정규식을 이용해 현재페이지 URL에서 전달받은 키값에 대한 쿼리스트링 값을 추출한다.
+            var results = new RegExp('[\?&]'+name+'=([^&#]*)').exec(window.location.href);
+            return results[1] || 0;
+        };
+
+        var aid = $.urlParam("aid");
+
+        // 수정 웹페이지가 모두 렌더링이 완료되면 백엔드에서 해당 게시글 고유번호 정보를 기반으로 단일 게시글 정보를 조회해옴.
+        // 조회된 JSON 단일 데이터에서 속성값을 추출해 일일이 해당 요소의 value 속성에 값으로 비안딩 해준다.
+        $(document).ready(function(){
+
+            $.get(`http://localhost:3000/api/articles/modify?aid=${aid}`, function(result){
+
+                console.log("백앤드로 부터 전달된 단일게시글 정보 출력: ", result);
+
+                // 서버에서 가져온 단일 게시글 JSON 데이터의 title, contents, display_yn 속성값을 UI요소의 value값으로 수동 바인딩 함.
+                $("#title").val(result.title);
+                $("#contents").val(result.contents);
+                $("#display_yn").val(result.display_yn);
+            });
+
+        });
+
+        // 수정 버튼이 클릭되면 백앤드 주소로 화면요소의 값을 추출해 단일 JSON을 만들어 전달함.
+        // btnSave에 click이라는 이벤트가 발생하면 데이터 추출 및 값 할당하기
+        $("#btnSave").click(function(){
+            
+            // 일일이 UI 요소의 특성값으로 UI 요소의 입력값을 추출하고 서버로 전달한 데이터소스에 값을 넣어주는 행위
+            // 이런방식의 개발패턴을 MVP(Model, View, Presenter)방식 이라고 한다.
+            // MVM(Model, View, ViewModel) 데이터 바인딩 패턴이 나오기전까지, 모바일/웹개발/윈도우 설치형 개발시 가장 많이 사용한 UI 개발 패턴이다.
+            // UI html 요소(태그)에 사용자가 입려간 데이터를 추출함.
+            var title = $("#title").val();
+            var contents = $("#contents").val();
+            var display_yn = $("#display_yn").val();
+
+            // 서버를 전달할 단일 게시글 JSON 객체를 정의하고 값을 할당함.
+            var article = {
+                "aid": aid,
+                "title": title,
+                "contents": contents,
+                "display_yn": display_yn
+            };
+
+            // 백앤드 게시글 등록 REST API 주소로 단일 JSON게시글 데이터를 전송 등록처리하고 결과값을 반환
+            // JQuery ajax 방식으로 post 방식으로 데이터를 서버로 전송하고 결과값을 반환
+            // post("전달할 주소", 전달할 데이터)
+            $.post('http://localhost:3000/api/articles/modify', article).done(function(result){
+
+                console.log("백앤드로부터 처리결과 반환값:", result);
+                alert("수정완료!");
+                location.href="./list.html";
+
+            });
+
+        });
+
+    </script>
+
+    </body>
+</html>
