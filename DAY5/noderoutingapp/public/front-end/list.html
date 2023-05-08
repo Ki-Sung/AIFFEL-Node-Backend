@@ -1,0 +1,62 @@
+<html>
+
+<body>
+<h1>게시글 목록 Front-end</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>글번호</th>
+            <th>제목</th>
+            <th>조회수</th>
+            <th>ip주소</th>
+            <th>게시여부</th>
+            <th>수정일시</th>
+        </tr>
+    </thead>
+    <tbody id="list">
+        
+    </tbody>
+</table>
+
+<!-- jQuery 대입  -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<script>
+    // 해당 list.html 웹페이지가 웹브라우저에 모두 로딩(렌더링) 완료되면 콜백함수 실행
+    $(document).ready(function(){
+        
+        // 백앤드 주소에서 전체 게시글 목록 데이터를 조회해온다.
+        // JQuery get 메소드는 ajax 기술로 백앤드주소에서 데이터를 조회해오는 기능제공
+        $.get('http://localhost:3000/api/articles/list', function(result){
+            
+            // 백앤드 호출 결과물이 result 값으로 전달되왼다.
+            console.log("백앤드에서 전달된 데이터 확인", result);
+
+            // 프론트앤드(웹브라우져)에서 동적으로 데이터 기반 html 코드를 생성해 tbody 태그에 append 한다.
+            $.each(result, function(i, item){
+                
+                var trTag = `
+                <tr>
+                    <td>${item.aid}</td>
+                    <td>${item.title}</td>
+                    <td>${item.view_cnt}</td>
+                    <td>${item.ip_address}</td>
+                    <td>Y${item.display_yn}</td>
+                    <td>${item.modify_date}</td>
+                </tr>
+                `;
+                
+                // 반복적으로 trTag를 tbody태그에 추가
+                $("#list").append(trTag);
+            });
+
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
+

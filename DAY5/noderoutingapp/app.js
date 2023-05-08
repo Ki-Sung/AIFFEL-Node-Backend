@@ -7,9 +7,12 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-// 개발자 정의 라우터의 파일을 참조한다. 
-// 회원정보 관리 웹페이지 요청과 응답 전용 라우터파일 참조 
+// 1. 개발자 정의 라우터의 파일을 참조한다. 
+// 1-1. 회원정보 관리 웹페이지 요청과 응답 전용 라우터파일 참조 
 var memberRouter = require('./routes/member');
+
+// 1-2. 게시글 정보처리 전용 REST API 라우터 참조 
+var articleAPIRouter = require('./routes/article-api');
 
 var app = express();
 
@@ -23,12 +26,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 각종 라우터파일의 기본 주소체계를 정의하는 곳
+// 2. 각종 라우터파일의 기본 주소체계를 정의하는 곳
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// memberRouter파일의 기본주소 체계를 locahost:3000/members/...로 정의 
+// 2-1. memberRouter파일의 기본주소 체계를 locahost:3000/members/...로 정의 
 app.use('/members', memberRouter);
+
+// 2-2. 게시글 데이터 처리 전용 라우터파일의 기본 주소 설정하기 
+// localhost:3000/api/articles/...
+app.use('/api/articles', articleAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
