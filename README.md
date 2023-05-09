@@ -34,5 +34,5 @@
 
 ### DAY5
 - How to make REST API
-- How to use JQuery for Front-end
+- How to connect to Front-end with JQuery
   - [Using jQuery with a CDN](https://jquery.com/download/) -> Goole CDN -> copy to 3.x snippet src
