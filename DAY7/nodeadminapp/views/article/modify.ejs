@@ -124,7 +124,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label">글내용</label>
-                                <textarea class="form-control" id="contents" name="contents" rows="10" cols="5"></textarea>
+                                <textarea class="form-control" id="contents" name="contents" rows="10" cols="5"><%=article.contents%></textarea>
                             </div>
                         </div>
                     </div>
@@ -135,8 +135,8 @@
                             <div class="form-group">
                                 <label class="control-label">게시여부</label>
                                 <select class="form-control">
-                                    <option value="Y">게시함</option>
-                                    <option value="N">게시안함</option>
+                                    <option value="Y" <% if(article.display_yn == "Y"){ %>selected<% } %> >게시함</option>
+                                    <option value="N" <% if(article.display_yn == "N"){ %>selected<% } %> >게시안함</option>
                                 </select>
                             </div>
                         </div>

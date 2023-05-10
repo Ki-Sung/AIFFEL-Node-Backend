@@ -109,33 +109,39 @@
             <div class="wrapper wrapper-content">
 
                 <!-- 조회 옵션 및 조회 버튼 영역 -->
-                <div class="ibox-content m-b-sm border-bottom">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label" for="OrderNo">제목</label>
-                                <input type="text" class="form-control">
+                <form action="/article/list" method="post">
+                    <div class="ibox-content m-b-sm border-bottom">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="OrderNo">제목</label>
+                                    <input type="text" name="title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="OrderName">아이피주소</label>
+                                    <input type="text" name="idaddress" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="MobileNo">사용여부</label>
+                                    <select name="displayyn" class="form-control">
+                                        <option value="">전체</option>
+                                        <option value="Y">게시함</option>
+                                        <option value="N">게시안함</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label" for="OrderName">아이피주소</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label" for="MobileNo">사용여부</label>
-                                <input type="text" class="form-control">
-                            </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">조회</button>
+                            <a href="/article/create" class="btn btn-info">신규</a>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <button type="button" class="btn btn-primary">조회</button>
-                        <a href="/article/create" class="btn btn-info">신규</a>
-                    </div>
-                </div>
-                
+                </form>
+
                 <!-- 조회 결과 목록 표시 영역 -->
                 <div class="row">
                     <div class="col-lg-12">
@@ -156,17 +162,19 @@
                                             </tr>
                                         </thead>
                                         <tbody class="hoverTblBody">
-
+                                            
+                                            <% for(var i = 0;i<articles.length;i++){ %>
                                             <tr>
-                                                <td><a href="#">1</a></td>
+                                                <td><a href="#"><%=articles[i].aid%></a></td>
                                                 <!-- 파라미터 방식으로 전달 -->
-                                                <td><a href="/article/modify/1">HelloWord</a></td>
-                                                <td>10</td>
-                                                <td>111.111.111.111</td>
-                                                <td>게시완료</td>
-                                                <td>2023.05.10</td>
-                                                <td>Gilbert</td>
+                                                <td><a href="/article/modify/<%=articles[i].aid%>"><%=articles[i].title%></a></td>
+                                                <td><%=articles[i].view_cnt%></td>
+                                                <td><%=articles[i].ip_address%></td>
+                                                <td><%=articles[i].display_yn%></td>
+                                                <td><%=articles[i].regist_date%></td>
+                                                <td><%=articles[i].regist_user%></td>
                                             </tr>
+                                            <% } %>
 
                                         </tbody>
                                     </table>
