@@ -7,6 +7,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+// 개발자 정의 부분 - 개발자 정의 라우터 파일 참조 및 기본 호출 주소 설정 처리 
+var articleRouter = require('./routes/article');
+
 var app = express();
 
 // view engine setup
@@ -21,6 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// 개발자 정의 부분 - 게시글 요청/응답 라우터의 기본주소 설정하기
+app.use('/article', articleRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
