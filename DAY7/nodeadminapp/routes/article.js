@@ -7,10 +7,24 @@ const { route } = require('../../../DAY5-DAY6/noderoutingapp/routes/member');
 // express 객체의 Router()메소드(기능)을 호출해서 사용자 요청과 응답을 처리할 라우터 객체를 생성
 var router = express.Router();
 
+// url 주소에서 특정 파라미터(쿼리스트링) 값이 있고 없고를 체크하는 미들웨어
+const {checkParams,checkQueryKey} = require('./middleware.js');
+
+//라우터 미들웨어테스트용 라우팅 메소드 
+router.get('/sample/:id',checkParams,function(req, res, next) {
+    res.render('index', { title: 'Express' }); 
+    });
+
+// 라우터 미들웨어 샘플1 
+router.use(function (req, res, next) {
+    console.log('Index 라우터 미들웨어 샘플1 :', Date.now());
+    next(); });
+
 
 // 게시글 정보조회 및 조회결과 웹페이지 요청 및 응답 처리 라우팅 메소드 
 // localhost:3000/article/list
-router.get('/list', async(req, res) => {
+// localhost:3000/article/list?category=테스트
+router.get('/list', checkQueryKey ,async(req, res) => {
 
     // 전체 게시글 정보를 DB에서 조회해옴.
     var articles = [
