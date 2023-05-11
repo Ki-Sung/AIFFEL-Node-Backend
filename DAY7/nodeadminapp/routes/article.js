@@ -91,9 +91,33 @@ router.get('/create', async(req, res) => {
 
 
 // 사용자가 입력한 게시글 등록 데이터 처리 요청 및 응답 라우팅 메소드 
-// router.post();
+// localhost:3000/article/create
+router.post('/create', async(req, res) => {
 
+    // step 1. 사용자 입력한 게시글 데이터를 폼요소에서 추출함.
+    var title = req.body.title;
+    var contents = req.body.contents;
+    var display_yn = req.body.display_yn;
 
+    // step 2. 폼에서 전달된 사용자 입력 값을 DB에 게시글 테이블에 저장함.
+    // 모든 RDBMS(DB) 테이블에 데이터를 저장하면 실제 저장된 해당 데이터를 백앤드 호출 메소드로 반환해 줌.
+
+    var article = {
+        aid: "1",
+        title: "HelloWord 1",
+        contents: "게시글 내용 1",
+        view_cnt: 40,
+        display_yn: "Y",
+        ip_address: "111.111.111.111",
+        regist_date: Date.now(),
+        regist_user: "Gilbert"
+    };
+
+    // 등록이 완료되면 게시글 목록페이지로 사용자 브라우저로 이동시킴.
+    // res.redirect('뷰 경로가 절대아닌 이동시키고자 하는 url 주소(도메인 제외)')
+    res.redirect('/article/list');
+    
+});
 
 // 단일 게시글 수정 웹페이지 요청 및 응답 처리 라우팅 메소드 
 // localhost:3000/article/modify/1 -> 파라미터 방식의 경우 와일드카드로 값을 추출함.
@@ -119,12 +143,47 @@ router.get('/modify/:aid', async(req, res) => {
 });
 
 // 사용자가 수정한 게시글 정보처리 요청 및 응답 라우팅 메소드 정의
-// router.post();
+router.post('/modify/:aid', async(req, res) => {
 
+    // step 1. 수정하려는 게시글 고유번호를 추출함.
+    // 방법 1. parameter 값을 추출하는 방법 
+    var aid = req.params.aid;
 
+    // 방법 2. form 태그내 hidden 요소가 있으면 hidden 요소의 name 값으로 추출함.
+    // var aid = req.body.aid;
+    
+    // step 2. 사용자가 수정한 게시글 폼 태그내 요소값을 추출.
+    var title = req.body.title;
+    var contents = req.body.contents;
+    var display_yn = req.body.display_yn;
+
+    // step 3. DB에 게시글 정보 수정처리 
+    // DB에 전달할 수정 데이터를 정의함.
+    var article = {
+        title,
+        contents,
+        display_yn
+    };
+
+    // step 4. 수정데이터가 DB에 반영 완료되면 게시글 목록페이지로 이동시킴.
+    res.redirect('/article/list');
+
+});
 
 // 선택 게시글 삭제처리 요청 및 응답 라우팅 메소드 정의 
-// router.get();
+// localhost/article/delete?aid=1
+router.get('/delete', async(req, res) => {
+
+    // 게시글 고유번호를 추출함.
+    var aid = req.query.aid;
+
+    // DB에서 해당 게시글을 영구 삭제 처리함.
+    
+
+    // 게시글 목록 페이지로 이동
+    res.redirect('/article/list')
+
+});
 
 
 // Router file은 해당 Router file에 정의된 router를 외부로 반환
