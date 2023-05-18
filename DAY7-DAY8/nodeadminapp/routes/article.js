@@ -10,6 +10,9 @@ var router = express.Router();
 // url 주소에서 특정 파라미터(쿼리스트링) 값이 있고 없고를 체크하는 미들웨어
 const {checkParams,checkQueryKey} = require('./middleware.js');
 
+var db = require('../models/index');
+var Op = db.Sequelize.Op;
+
 //라우터 미들웨어테스트용 라우팅 메소드 
 router.get('/sample/:id',checkParams,function(req, res, next) {
     res.render('index', { title: 'Express' }); 
@@ -197,6 +200,26 @@ router.get('/delete', async(req, res) => {
     // 게시글 목록 페이지로 이동
     res.redirect('/article/list')
 
+});
+
+
+
+// 라우팅 메소드 설정 
+router.post('/entry', async(req, res) => {
+
+    var email = req.body.email;
+    var member_password = req.body.password;
+    var name = req.body.name;
+    var telephone = req.body.telephone;
+
+    var member = {
+        email:email 
+    };
+
+    // 회원정보 신규등록 
+    await db.Member.create(member);
+
+    res.redirect('/member/list')
 });
 
 
