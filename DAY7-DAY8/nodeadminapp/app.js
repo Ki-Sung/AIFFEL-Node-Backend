@@ -13,6 +13,9 @@ var usersRouter = require('./routes/users');
 // 개발자 정의 부분 - 개발자 정의 라우터 파일 참조 및 기본 호출 주소 설정 처리 
 var articleRouter = require('./routes/article');
 
+// 회원정보관리 RESTAPI 라우터 파일 참조하기 
+var memberAPIRouter = require('./routes/memberAPI');
+
 // 모델 index.js를 참조해서 sequelizeORM 객체를 참조 
 // node application이 최초 실행시 Mysql DB 서버와 연결하고 테이블들을 자동으로 생성 
 // model 폴더내 각종 model.js 파일들을 이용해 연결된 해당 DB에 물리적인 테이블을 생성 (만약 테이블이 있다면 재생성하지 않음.)
@@ -58,6 +61,10 @@ app.use('/users', usersRouter);
 
 // 개발자 정의 부분 - 게시글 요청/응답 라우터의 기본주소 설정하기
 app.use('/article', articleRouter);
+
+// 개발자 정의 부분 - 회원정보 관리 RESTAPI 라우터 기본호출 주소 설정
+app.use('/api/members', memberAPIRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
