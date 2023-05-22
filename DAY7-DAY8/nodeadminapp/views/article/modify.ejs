@@ -22,7 +22,7 @@
 
             <!--우측 콘텐츠 영역 -->
             <div class="wrapper wrapper-content">
-                <form id="articleForm" action="/article/modify/<%=article.aid%>" method="post">
+                <form id="articleForm" action="/article/modify/<%=article.article_id%>" method="post">
                     <div class="ibox-content m-b-sm border-bottom">
 
                         <!-- 제목영역박스영역 -->
@@ -51,8 +51,8 @@
                                 <div class="form-group">
                                     <label class="control-label">게시여부</label>
                                     <select class="form-control" id="display_yn", name="display_yn">
-                                        <option value="Y" <% if(article.display_yn == "Y"){ %>selected<% } %> >게시함</option>
-                                        <option value="N" <% if(article.display_yn == "N"){ %>selected<% } %> >게시안함</option>
+                                        <option value="1" <% if(article.is_display_code == 1){ %>selected<% } %> >게시함</option>
+                                        <option value="0" <% if(article.is_display_code == 0){ %>selected<% } %> >게시안함</option>
                                     </select>
                                 </div>
                             </div>

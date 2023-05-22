@@ -106,7 +106,6 @@ router.post('/list', async(req, res) => {
 });
 
 
-
 // 게시글 등록 웹페이지 요청 및 응답 처리 라우팅 메소드 
 // localhost:3000/article/create
 router.get('/create', async(req, res) => {
@@ -128,16 +127,20 @@ router.post('/create', async(req, res) => {
     // step 2. 폼에서 전달된 사용자 입력 값을 DB에 게시글 테이블에 저장함.
     // 모든 RDBMS(DB) 테이블에 데이터를 저장하면 실제 저장된 해당 데이터를 백앤드 호출 메소드로 반환해 줌.
 
+    // 테이블에 저장할 데이터의 속성은 반드시 해당 모델의 속성명과 일치해함!
     var article = {
-        aid: "1",
-        title: "HelloWord 1",
-        contents: "게시글 내용 1",
-        view_cnt: 40,
-        display_yn: "Y",
-        ip_address: "111.111.111.111",
-        regist_date: Date.now(),
-        regist_user: "Gilbert"
+        board_type_code: 2,
+        title: title,
+        article_type_code: 0,
+        contents: contents,
+        view_count: 1,
+        ip_address: "111.111.111.111", 
+        is_display_code: display_yn,
+        reg_date: Date.now(),
+        reg_member_id: 1
     };
+
+    var article = await db.Article.create(article);
 
     // 등록이 완료되면 게시글 목록페이지로 사용자 브라우저로 이동시킴.
     // res.redirect('뷰 경로가 절대아닌 이동시키고자 하는 url 주소(도메인 제외)')
@@ -153,15 +156,17 @@ router.get('/modify/:aid', async(req, res) => {
     var articleId = req.params.aid;
 
     // step2. 해당 게시글 번호에 해당하는 데이터를 게시글 테이블에서 조회해옴.
-    var article = {
-        aid: "1",
-        title: "HelloWord",
-        contents: "게시글 내용",
-        view_cnt: 1,
-        display_yn: "Y",
-        regist_date: Date.now(),
-        regist_user: "Gilbert"
-    }
+    // var article = {
+    //     aid: "1",
+    //     title: "HelloWord",
+    //     contents: "게시글 내용",
+    //     view_cnt: 1,
+    //     display_yn: "Y",
+    //     regist_date: Date.now(),
+    //     regist_user: "Gilbert"
+    // }
+
+    var article = await db.Article.findOne({where:{article_id:articleId}});
 
     // 게시글 수정 웹페이지 뷰에 단일게시글 데이터를 전달함.
     res.render('article/modify', {article:article});
@@ -173,7 +178,7 @@ router.post('/modify/:aid', async(req, res) => {
 
     // step 1. 수정하려는 게시글 고유번호를 추출함.
     // 방법 1. parameter 값을 추출하는 방법 
-    var aid = req.params.aid;
+    var articleId = req.params.aid;
 
     // 방법 2. form 태그내 hidden 요소가 있으면 hidden 요소의 name 값으로 추출함.
     // var aid = req.body.aid;
@@ -188,8 +193,16 @@ router.post('/modify/:aid', async(req, res) => {
     var article = {
         title,
         contents,
-        display_yn
+        is_display_code:display_yn,
+        edit_date:Date.now(),
+        edit_member_id:1
     };
+
+    // 수정처리 
+    var updatedCnt = await db.Article.update(article, 
+        {
+            where:{article_id:articleId}
+        });
 
     // step 4. 수정데이터가 DB에 반영 완료되면 게시글 목록페이지로 이동시킴.
     res.redirect('/article/list');
