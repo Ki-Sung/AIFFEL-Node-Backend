@@ -8,6 +8,11 @@ const { route } = require('../../../DAY5-DAY6/noderoutingapp/routes/member');
 // DB 객체참조 
 var db = require('../models/index');
 
+const { QueryTypes } = db.sequelize;
+
+// 조건 연산자 객체 참조
+const { Op } = require("sequelize");
+
 // express 객체의 Router()메소드(기능)을 호출해서 사용자 요청과 응답을 처리할 라우터 객체를 생성
 var router = express.Router();
 
@@ -67,9 +72,21 @@ router.get('/list', async(req, res) => {
     //     }
     // ];
 
-    var articles = await db.Article.findAll();
+    // SELECT article_id, title, ip_address, is_display_code, view_count, reg_date, reg_member_id 
+    //FROM article WHERE article_id > 0 ORDER BY view_count DESC;
+    var articles = await db.Article.findAll({
+        attributes: ['article_id', 'title', 'ip_address', 'is_display_code', 'view_count', 'reg_date', 'reg_member_id'],
+        // 조건 - sequelize op 문법 사용하기 
+        where:{article_id : {[Op.gt]: 0}},
+        order: [['view_count', 'DESC']]
+    });
 
-    res.render('article/list.ejs', {articles:articles, moment:moment});
+    // 조회수 총 개수 
+    var totalCount = await db.Article.count({
+        where:{article_id : {[Op.gt]: 0}},
+    });
+
+    res.render('article/list.ejs', {articles:articles, moment:moment, totalCount:totalCount});
 
 });
 
@@ -99,6 +116,11 @@ router.post('/list', async(req, res) => {
 
 
     var articles = await db.Article.findAll({where:{title:title}});
+
+    // 조회수 총 개수 
+    var totalCount = await db.Article.count({
+        where:{article_id : {[Op.gt]: 0}},
+    });
 
     // step 3. 조회 결과 목록 데이터를 list.ejs view에 전달함.
     res.render('article/list', {articles, moment});
@@ -166,7 +188,31 @@ router.get('/modify/:aid', async(req, res) => {
     //     regist_user: "Gilbert"
     // }
 
-    var article = await db.Article.findOne({where:{article_id:articleId}});
+    // ORM으로 바로 가져가기 
+    // var article = await db.Article.findOne({where:{article_id:articleId}});
+
+    // 쿼리문을 직접 입력해서 조회 방식
+    // SQL 쿼리를 직접 전달하면, 실행결과가 조회건수가 1건이라도 배열형태로 값이 반환됨.
+    // var sqlQuery =`SELECT * FROM member WHERE article_id='${articleId}';`
+    // var articles = await db.sequelize.query(sqlQuery,{
+    //         raw: true,
+    //         type: QueryTypes.SELECT,
+    // });
+
+    // 저장프로시져 기반 데이터 조회하기 예시 2
+    var articles = await db.sequelize.query(
+        "CALL SP_CHAT_ARTICLE_BYID (:P_ARTICLE_ID)",
+        { replacements: { P_ARTICLE_ID: articleId } }
+    );
+
+    // 단일 게시글 뽑아내기 
+    var article = {};
+    if(articles.length > 0){
+        article = articles[0];
+    }
+
+    // 조회수 1 더하기 적용 처리 
+    await db.Article.update({view_count:article.view_count+1}, {where:{article_id:articleId}});
 
     // 게시글 수정 웹페이지 뷰에 단일게시글 데이터를 전달함.
     res.render('article/modify', {article:article});
@@ -217,7 +263,7 @@ router.get('/delete', async(req, res) => {
     var aid = req.query.aid;
 
     // DB에서 해당 게시글을 영구 삭제 처리함.
-    
+    var deltedCnt = await db.Article.destroy({where:{article_id:aid}});
 
     // 게시글 목록 페이지로 이동
     res.redirect('/article/list')
