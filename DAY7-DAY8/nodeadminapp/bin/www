@@ -12,6 +12,9 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
+// 환경 설정 파일인 .env내에 PORT라는 키가 존재하며 해당 키값을 사용하고, 
+// 그렇지 않으면 기본 노드 어플리케이션 서비스 포트인 3000을 사용함
+// .env 파일내 특정키의 값을 호출하고 싶으면 process.env. 키명으로 추출함.
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 

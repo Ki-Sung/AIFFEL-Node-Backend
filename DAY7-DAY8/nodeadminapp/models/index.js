@@ -6,10 +6,14 @@ const Sequelize = require('sequelize');
 
 // 개발모드 환경설정 - 공통적인 개발환경 설정 가능!
 // 여기서 development는 config.json에 있는 mysql DB 정보 
+// 환경 설정 파일인 .env 파일내에 NODE_ENV 키값을 추출해서 개발 모드인지 테스트 모드인지 프로덕션 모드인지 확인함.
 const env = process.env.NODE_ENV || 'development';
 
 // DB연결 환경설정정보 변경처리//관련정보 수정 - config 파일 
-const config = require(path.join(__dirname,'..','config','config.json'))[env];
+//const config = require(path.join(__dirname,'..','config','config.json'))[env];
+
+// config.js 모듈에서 DB 정보를 가져옴
+const config = require('../config/config')[env];
 
 // 데이터 베이스 객체
 const db= {};
