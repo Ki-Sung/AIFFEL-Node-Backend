@@ -32,5 +32,8 @@ db.Member = require('./member.js')(sequelize,Sequelize);
 // 게시글 모델 모듈 파일 참조하고 DB 속성으로 정의함.
 db.Article = require('./article.js')(sequelize,Sequelize);
 
+// 관리자 계정 모델 모듈 파일 참조하고 DB 속성으로 정의
+db.Admin = require('./admin.js')(sequelize,Sequelize);
+
 // db객체 외부로 노출하기
 module.exports = db;

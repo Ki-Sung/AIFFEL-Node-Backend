@@ -13,6 +13,9 @@ var usersRouter = require('./routes/users');
 // 개발자 정의 부분 - 개발자 정의 라우터 파일 참조 및 기본 호출 주소 설정 처리 
 var articleRouter = require('./routes/article');
 
+// 관리자 계정관리 라우터 파일참조하기 
+var adminRouter = require('./routes/admin');
+
 // 회원정보관리 RESTAPI 라우터 파일 참조하기 
 var memberAPIRouter = require('./routes/memberAPI');
 
@@ -67,6 +70,9 @@ app.use('/article', articleRouter);
 
 // 개발자 정의 부분 - 회원정보 관리 RESTAPI 라우터 기본호출 주소 설정
 app.use('/api/members', memberAPIRouter);
+
+// 관리자 계정 관리 라우터 기본 주서 설정하기 
+app.use('/admin', adminRouter);
 
 
 // catch 404 and forward to error handler
