@@ -43,14 +43,56 @@ router.post('/login', async(req, res, next) => {
       var isCorrectPwd = await bcrypt.compare(admin_password, admin.admin_password);
       
       if(isCorrectPwd == true){
-      // step:4 장성작으로 로그인 된 경우 메인페이지로 이동 
-      res.redirect('/');
-    }else{
+
+        // 서버 세션 정의 및 저장 
+        // login한 사용자 정보중 중요 정보를 서버 세션(서버 메모리)으로 저장하고, 세션 아이디 값을 쿠키에 담아 브라우저에 전달.
+        // 브라우저는 인증(로그인)시 발금된 쿠키를 가지고 다시 로그인 없이 서버에서 사용자를 인식하게 됨.
+        // 브라우저는 서버에 서비스를 요청할때 마다 발급된 쿠키를 서버에 전달하고 서버는 쿠키안에 있는 세션 아이값을 기준으로 서버 메모리에 저장된 세션목록에서 사용자정보를 추출해 사용자를 인식
+
+        // 세션이란 사용자 단위로 가각의 사용자정보를 관리하는 단위 
+        //req.session객체에 동적속성 추가
+        req.session.isLogined = true;
+        
+        // loginUser라는 동적속성을 세션객체에 정의하고 현재 로그인한 사용자의 고유번호, 아이다, 이름을 각각의 속성으로 저장
+        req.session.loginUser ={
+          userSeq:admin.admin_member_id,
+          userId:admin.admin_id,
+          userName:admin.admin_name,
+        };
+
+        //세션에 추가한 동적속성과 값을 최종 저장한다. 
+        // req.session.save() 메소드가 호출되면 동적속성값을 session 객체에 최종저장하고 세션 아이디 값을 기준으로
+        // 서버에서 쿠키를 웹브라우저 발급해서 저장시킨다
+        req.session.save(function(){
+        // 사용자 암호까지 일치하는 경우
+        // step:4 장성작으로 로그인 된 경우 메인페이지로 이동 
+        res.redirect('/');
+        });
+
+      }else{
       // 사용자 암호가 일치하지 않는 경우 
       res.render('login.ejs', {layout:'loginLayout.ejs'});
     }
   }
   
+});
+
+// 로그인한 사용자의 프로필 소개 페이지 요청/응답  라우팅 메소드
+// http://localhost:3001/profile
+router.get('/profile', async(req, res) => {
+
+  // req.session객체에 isLogined 속성이 정의가 안되어 있다면(즉, 미로그인 시)
+  // 만약 로그인 속성이 없다면,
+  if (req.session.isLogined == undefined){
+    // 로그인 페이지로 다시 이동
+    res.redirect('/login')
+  }else{
+    // 현재 로그인 사용자 세션 정보 추출하기 
+    var userSession = req.session.loginUser;
+
+    // 프로필 웹페이지 제공 
+    res.render('profile.ejs', {userData:userSession});
+  }
 
 });
 
