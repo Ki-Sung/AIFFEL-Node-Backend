@@ -13,6 +13,9 @@ const { QueryTypes } = db.sequelize;
 // 조건 연산자 객체 참조
 const { Op } = require("sequelize");
 
+// 권한 체크 미들웨어 참조 
+var { isLoggedIn } = require('./authorizeMiddleware');
+
 // express 객체의 Router()메소드(기능)을 호출해서 사용자 요청과 응답을 처리할 라우터 객체를 생성
 var router = express.Router();
 
@@ -36,7 +39,7 @@ router.use(function (req, res, next) {
 // 게시글 정보조회 및 조회결과 웹페이지 요청 및 응답 처리 라우팅 메소드 
 // localhost:3000/article/list
 // localhost:3000/article/list?category=테스트
-router.get('/list', async(req, res) => {
+router.get('/list', isLoggedIn, async(req, res) => {
 
     // 전체 게시글 정보를 DB에서 조회해옴.
     // var articles = [
@@ -130,7 +133,7 @@ router.post('/list', async(req, res) => {
 
 // 게시글 등록 웹페이지 요청 및 응답 처리 라우팅 메소드 
 // localhost:3000/article/create
-router.get('/create', async(req, res) => {
+router.get('/create', isLoggedIn, async(req, res) => {
 
     res.render('article/create');
 

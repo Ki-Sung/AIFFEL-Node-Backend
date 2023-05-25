@@ -7,9 +7,26 @@ var bcrypt = require('bcryptjs');
 // DB ORM 객체 정의 
 var db = require('../models/index');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
+// 권한 체크 미들웨어 참조 
+var { isLoggedIn } = require('./authorizeMiddleware');
+
+/* 
+기본 메인 페이지 
+localhost:3001/
+*/
+router.get('/', isLoggedIn, function(req, res, next) {
+
+  // 수동으로 모든 라우팅 메소드에서 권한체크
+  // 각각의 라우팅 메소드 콜백함수가 실행되기전에 권한체크를 해주는 함수가 있으면 더욱 편함.
+  // 여기서 라우팅 메소드 권한 체크 미들웨어함수를 하나 만들면 된다.
+  // if(req.session.isLogined == undefined){
+  //   res.redirect('/login');
+  // }else{
+  //   res.render('index', { title: 'Express' });
+  // }
+
   res.render('index', { title: 'Express' });
+
 });
 
 /* 괸리자 사잍 로그인 웹페이지 요청/응답 라우팅 메소드. 
@@ -18,7 +35,7 @@ localhost:3001/login
 router.get('/login', async(req, res, next) => {
   
   // 로그인 전용 레이아웃 ejs 파일 적용
-  res.render('login.ejs', {layout:'loginLayout.ejs'});
+  res.render('login.ejs', {layout:'loginLayout.ejs', loginResult:""});
 });
 
 router.post('/login', async(req, res, next) => {
@@ -32,7 +49,7 @@ router.post('/login', async(req, res, next) => {
   
   if(admin == null){
     // 동일한 아이디의 관리자정보가 존재하지 않은 경우 - 로그인 페이지 다시 로드 
-    res.render('login.ejs', {layout:'loginLayout.ejs'});
+    res.render('login.ejs', {layout:'loginLayout.ejs', loginResult:"아이디가 일치하지 않습니다!"});
 
     }else{
       // 동일한 아이다의 관리자 정보가 존재하는 경우 
@@ -71,7 +88,7 @@ router.post('/login', async(req, res, next) => {
 
       }else{
       // 사용자 암호가 일치하지 않는 경우 
-      res.render('login.ejs', {layout:'loginLayout.ejs'});
+      res.render('login.ejs', {layout:'loginLayout.ejs', loginResult:"암호가 일치하지 않습니다!"});
     }
   }
   
@@ -79,20 +96,34 @@ router.post('/login', async(req, res, next) => {
 
 // 로그인한 사용자의 프로필 소개 페이지 요청/응답  라우팅 메소드
 // http://localhost:3001/profile
-router.get('/profile', async(req, res) => {
+router.get('/profile', isLoggedIn, async(req, res) => {
 
   // req.session객체에 isLogined 속성이 정의가 안되어 있다면(즉, 미로그인 시)
   // 만약 로그인 속성이 없다면,
-  if (req.session.isLogined == undefined){
-    // 로그인 페이지로 다시 이동
-    res.redirect('/login')
-  }else{
+  // if (req.session.isLogined == undefined){
+  //   // 로그인 페이지로 다시 이동
+  //   res.redirect('/login')
+  // }else{
     // 현재 로그인 사용자 세션 정보 추출하기 
-    var userSession = req.session.loginUser;
+  //   var userSession = req.session.loginUser;
 
-    // 프로필 웹페이지 제공 
-    res.render('profile.ejs', {userData:userSession});
-  }
+  //   // 프로필 웹페이지 제공 
+  //   res.render('profile.ejs', {userData:userSession});
+  // }
+  // 현재 로그인 사용자 세션 정보 추출하기 
+  var userSession = req.session.loginUser;
+
+  // 프로필 웹페이지 제공 
+  res.render('profile.ejs', {userData:userSession});
+
+});
+
+// 로그아웃처리 라우팅 메소드
+router.get('/logout', async(req, res) => {
+
+  req.session.destroy(function(err){
+    res.redirect('/login');
+  })
 
 });
 
