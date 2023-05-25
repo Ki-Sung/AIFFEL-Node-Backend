@@ -1,0 +1,48 @@
+<html>
+    <body>
+    <h1>모든 연결사용자간 채팅</h1>
+        채팅 닉네임:<input type="text" id="nickname" value="gilbert"><br>
+        전송 메시지:<input type="text" id="message" value=""><br>
+        <input type="button" id="btnSend" value="전송"><br>
+
+        <hr>
+        <!-- 채팅이력 표시 ul tag -->
+        <ul id="chatHistory">
+        </ul>
+
+        <!-- jquery cdn 라이브러리 참조  -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        
+        <!-- socket.io javascript library 참조  -->
+        <script src="/socket.io/socket.io.js"></script>
+        
+        <script>
+            //클라이언트(웹브라우저) 서버 연결 소켓 객체 정의
+            var socket = io.connect('/');
+
+            //전송버튼 클릭시 사용자 입력메시지를 서버에 특정 이벤트 기능으로 전송한다.
+            $("#btnSend").click(function(){
+                var msg = $("#message").val();
+                var nickName = $("#nickname").val();
+                var sendMsg = `${nickName}:${msg}`;  // 기성: 메시지 
+
+                // 서버 socket.js 파일로 메시지를 전송 
+                // socket.js 메시지 수신기 명은 broadcast 수신기에 문자열 데이터를 전송함.
+                // socket.emit('서버이벤트수신기명', '이벤트수신기로 보내는 문자열 데이터');
+                socket.emit("broadcast",sendMsg);
+
+            });
+            
+            // 서버 socket.js 에서  보내는 메시지를 받는 클라이언트 이벤트 수신기 기능 정의 
+            // 클라이언트 메시지 이벤트 수신기명이 receiveAll이고 서버에서 전달해준 데이터는 receiveMsg 매개변수로 받음
+            socket.on("receiveAll",function(receiveMsg){
+                console.log("메시지 수신기-데이터","receiveAll",receiveMsg);
+
+                // id가 chatHistory인 ul 태그에 li 태그를 추가함.
+                // li 태그 텍스트 값으로 서버에서 전달된 메시지를 포함시킴.
+                $("#chatHistory").append(`<li>${receiveMsg}</li>`);
+            });
+        </script>
+
+    </body>
+</html>
