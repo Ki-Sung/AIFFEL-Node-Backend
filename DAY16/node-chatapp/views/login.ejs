@@ -54,7 +54,7 @@
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
 					<div class="login-wrapper">
-						<form action="index.html">
+						<form>
 							<div class="login-screen">
 								<div class="login-body">
 									<a href="index.html" class="login-logo">
@@ -62,16 +62,16 @@
 									</a>
 									<h6>Welcome back,<br>Please login to your account.</h6>
 									<div class="field-wrapper">
-										<input type="email" autofocus>
+										<input type="email" id="email" autofocus>
 										<div class="field-placeholder">Email ID</div>
 									</div>
 									<div class="field-wrapper mb-3">
-										<input type="password">
+										<input type="password" id="password">
 										<div class="field-placeholder">Password</div>
 									</div>
 									<div class="actions">
 										<a href="forgot-password.html">Forgot password?</a>
-										<button type="submit" class="btn btn-primary">Login</button>
+										<button type="button" id="btnLogin" class="btn btn-primary">Login</button>
 									</div>
 								</div>
 								<div class="login-footer">
@@ -88,6 +88,39 @@
 		<!-- *************
 			************ Login container end *************
 		************* -->
+	
+	<script src="js/jquery.min.js"></script>
+
+	<script>
+		$("#btnLogin").click(function(){
+
+			var loginUser={
+				"email":$("#email").val(),
+				"password":$("#password").val()
+			};
+
+			$.ajax({
+			url:"http://localhost:3000/api/member/login",
+			type:"POST",
+			data:loginUser,
+			success:function(res){
+				console.log(res);
+
+				if(res.code ==200){
+					//사용자 브라우저에 Local Storage영역에 서버에서 발급받은 토큰을 저장한다.
+					localStorage.setItem('moduauthtoken', res.data);
+					//location.href ="/chat";
+
+					//localStorage.getItem('msofttoken’); //저장된 토큰 불러올때
+					//location.href ="./list.html";
+				}else{
+					alert("에러발생");
+				}
+			}
+		});
+	});
+
+	</script>
 
 	</body>
 </html>
