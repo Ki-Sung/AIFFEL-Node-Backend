@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// dotenv 환경설정 추가 
+require('dotenv').config()
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
