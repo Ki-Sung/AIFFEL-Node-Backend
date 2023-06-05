@@ -9,6 +9,7 @@ var jwt = require('jsonwebtoken');
 
 // db 객체 참조 
 var db = require('../models/index');
+const member = require('../models/member');
 
 // 신규 회원가입 처리 REST API 라우팅 메소드
 // localhost:3000/api/member/signup
@@ -121,6 +122,64 @@ router.post('/login', async(req, res) => {
 
         }
 
+    res.json(result);
+
+});
+
+// 이미 로그인한 사용자의 기본 프로필 정보 조회 REST API 라우팅 메소드 
+// localhost:3000/api/member/profile
+// 로그인시 서버에서 발급된 JWt 인증 토큰에서 사용자 메일주소를 추출해서 해당 사용자 정보를 조회 데이터 반환함.
+router.get('/profile', async(req, res) => {
+
+    // api 프로트로 반환하는 결과값 형식 정의
+    var result = {
+        code:200,
+        msg:"",
+        data:null
+    };
+
+    try{
+
+        // step 1. JWT 인증 토큰이 존재하는지 체크한다. 
+        const token = req.headers.authorization.split('Bearer ')[1];
+
+        console.log("프론트제공 JTW 토큰", token);
+
+        // 클라이언트에서 JWT 인증 토큰이 제공되지 않았으면(비로그인상태)
+        if(token == undefined){
+            result.code = 404;
+            result.data = null;
+            result.msg = "Not Exist Token!";
+
+            return res.json(result);
+        };
+
+        // step 2. JWT 인증 토큰에서 메일 주소를 추출한다. 
+        var currentMember = jwt.verify(token, process.env.JWT_KEY);
+        console.log("JWT 토큰내 실제 로그인 사용자 정보: ", currentMember);
+
+        // 현재 로그인한 사용자 메일주소 추출하기 
+        var loginMemberEmail = currentMember.email;
+
+        // step 3. 메일주소기반 사용자 정보를 테이블에서 조회한다. 
+        var memberData = await db.Member.findOne({where:{email:loginMemberEmail}});
+
+        // 사용자 암호 암호화 문자열을 빈 문자열로 변경해서 클라이언트에서 전송(보안이 신경쓰인다면)
+        memberData.password = "";
+
+        result.code = 200;
+        result.data = memberData;
+        result.msg = "OK";
+
+    }catch(Error){
+
+    // 서버파일시스템에 로깅파일로 저장함.
+    result.code = 500;
+    result.msg = "서버에러 발생 관리자에게 문의하세요.";
+
+    };
+
+    // step 4. 조회결과 데이터를 반환한다. 
     res.json(result);
 
 });

@@ -501,8 +501,8 @@
 											<a class="dropdown-item offline" href="#">Offline</a>
 										</div>
 									</div>
-									<h5>Jennifer Lopezx</h5>
-									<h6>Bern, Switzerland</h6>
+									<h5 id="name">Jennifer Lopezx</h5>
+									<h6 id="email">Bern, Switzerland</h6>
 								</div>
 								<!-- User profile end -->
 
@@ -1934,6 +1934,44 @@
 
 		<!-- Main Js Required -->
 		<script src="js/main.js"></script>
+
+		<script>
+			// 프로필 아이콘 클릭시 현재 로그인한 사용자 프로필 정보 조회 바인딩처리
+			$("#profile-tab").click(function () {
+
+				// 로컬스토리지에 저장되어 있는 키값을 이용하여 JWT 토큰값을 조회한다.
+				var storageToken = localStorage.getItem('moduauthtoken');
+
+				$.ajax({
+					type:"GET",
+					url:"/api/member/profile",
+					headers:{
+						'Authorization':'Bearer '+ storageToken
+					},
+					dataType:'json',
+					success:function(result){
+						console.log("조회 반환결과:",result);
+						if(result.code == "200"){
+							// 로직처리
+							console.log("백앤드에서 전달된 사용자 데이터 출력: ", result.data);
+
+							// 화면상의 프로필 이름과 메일주소 UI 요소에 데이터 바인딩 처리 
+							$("#name").text(result.data.name);
+							$("#email").text(result.data.email);
+
+						}else{
+							// alert(result.msg);
+							
+							// 비로그인시 로그인 페이지로 이동 처리  
+							location.href="/login";
+						}
+					},
+					error:function(xhr,status,error){
+						console.error(error);
+					}
+				});
+			});
+		</script>
 
 	</body>
 </html>
