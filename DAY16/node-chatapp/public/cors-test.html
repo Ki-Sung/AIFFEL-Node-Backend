@@ -1,0 +1,23 @@
+<html>
+
+    <body>
+
+        <h1>CORS 개념 이해하기</h1>
+        <p>호출하려는 REST API와 REST API를 호출하는 웹페이지 주소 도메인이 동일하면 문제없음.</p>
+        <p>호출하려는 REST API와 REST API를 호출하는 웹페이지 주소 도메인이 다른경우 데이터 호출 불가 이슈 발생 이것을 "CORS 이슈"라고 함.</p>
+        
+        <script src="./js/jquery.min.js"></script>
+
+        <script>
+
+            // 모든 회원목록 조회하기 
+            $.get('http://localhost:3000/api/member/all').then(function(result){
+
+                console.log("모든회원 목록: ", result);
+
+            });
+
+        </script>
+    </body>
+
+</html>

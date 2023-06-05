@@ -54,7 +54,7 @@
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
 					<div class="login-wrapper">
-						<form action="index.html">
+						<form id="signupForm">
 							<div class="login-screen">
 								<div class="login-body">
 									<a href="index.html" class="login-logo">
@@ -62,16 +62,20 @@
 									</a>
 									<h6>Welcome to Quick Chat App,<br>Create your account.</h6>
 									<div class="field-wrapper">
-										<input type="email" autofocus>
+										<input type="email" id="email" autofocus>
 										<div class="field-placeholder">Email ID</div>
 									</div>
 									<div class="field-wrapper">
-										<input type="password">
+										<input type="password" id="password">
 										<div class="field-placeholder">Password</div>
 									</div>
 									<div class="field-wrapper mb-3">
-										<input type="password">
+										<input type="password" id="passwordConfirm">
 										<div class="field-placeholder">Confirm Password</div>
+									</div>
+									<div class="field-wrapper mb-3">
+										<input type="text" id="name">
+										<div class="field-placeholder">Name</div>
 									</div>
 									<div class="actions">
 										<button type="submit" class="btn btn-primary ml-auto">Sign Up</button>
@@ -91,6 +95,45 @@
 		<!-- *************
 			************ Login container end *************
 		************* -->
+
+		<script src="js/jquery.min.js"></script>
+
+		<script>
+
+			// form 태그에 submit 이벤트가 발생하면, 
+			$("#signupForm").submit(function () {
+
+				var email = $("#email").val();
+				var password = $("#password").val();
+				var name = $("#name").val();
+
+				var memberData = {
+					"email":email,
+					"password":password,
+					"name": name,
+					"telephone": ""
+				};
+
+				$.ajax({
+					url:"http://localhost:3000/api/member/signup",
+					type:"POST",
+					data:memberData,
+					success:function(res){
+						console.log(res);
+		
+						if(res.code == 200){
+							location.href ="/login";
+							
+						}else{
+							alert("에러발생");
+						}
+					}
+				});
+
+				return false;
+			});
+
+		</script>
 
 	</body>
 </html>

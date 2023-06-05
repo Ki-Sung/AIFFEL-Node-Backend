@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// CORS 객체 참조 
+const cors = require("cors");
+
 // dotenv 환경설정 추가 
 require('dotenv').config();
 
@@ -21,6 +24,9 @@ var app = express();
 
 //mysql과 자동연결처리 및 모델기반 물리 테이블 생성처리제공
 sequelize.sync();
+
+//모든 호출 허락 
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

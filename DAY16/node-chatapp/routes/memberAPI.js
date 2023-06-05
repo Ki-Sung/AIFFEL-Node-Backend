@@ -184,4 +184,14 @@ router.get('/profile', async(req, res) => {
 
 });
 
+// 모든 회원정보를 조회함.
+// CORS 테스트용 REST API 메소드 
+// localhost:3000/api/member/all
+router.get('/all', async(req, res) => {
+
+    var members = await db.Member.findAll();
+    res.json(members);
+
+});
+
 module.exports = router;
