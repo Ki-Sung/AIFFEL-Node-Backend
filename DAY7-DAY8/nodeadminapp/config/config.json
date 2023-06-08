@@ -1,23 +1,23 @@
 {
   "development": {
     "username": "root",
-    "password": null,
+    "password": "Gilbert1234@@",
     "database": "gilbert_db",
-    "host": "127.0.0.1",
+    "host": "223.130.128.131",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
+    "password": "Gilbert1234@@",
     "database": "gilbert_db",
-    "host": "127.0.0.1",
+    "host": "223.130.128.131",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": null,
+    "password": "Gilbert1234@@",
     "database": "gilbert_db",
-    "host": "127.0.0.1",
+    "host": "223.130.128.131",
     "dialect": "mysql"
   }
 }
