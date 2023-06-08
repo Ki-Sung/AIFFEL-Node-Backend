@@ -7,7 +7,7 @@
     </head>
 
     <body>
-        <h1>소켓서버와 연결된 모든 사용자간 채팅하기</h1>
+        <h1>chatGPT-3.5터보-소켓서버와 연결된 모든 사용자간 채팅하기</h1>
 
         대화명:<input type="text" id="nickName" value="Gilbert"/><br/>
         메시지:<input type="text" id="message" value="" /><br/>
@@ -39,18 +39,18 @@
 
                 // 서버 소켓 socket.js내 특정 서버 이벤트 수신기로 데이터를 보낸다.
                 // socket.emit("서버 socket.js에 정의되어있는 서버소켓이벤트 수신기명", 전달할 데이터)
-                //socket.emit("broadcast", msgData);
+                socket.emit("broadcast", msgData);
                 //socket.emit("test1", nickName, message);
 
-                var jsonMsgData = {
-                    "nickName":nickName,
-                    "msg":message
-                };
+                //var jsonMsgData = {
+                //   "nickName":nickName,
+                //    "msg":message
+                //};
                 
-                socket.emit("test2", jsonMsgData);
+                //socket.emit("test2", jsonMsgData);
 
 
-                console.log("서버소켓의 broadcast 이벤트를 호출");
+                //console.log("서버소켓의 broadcast 이벤트를 호출"); 
             });
 
             // 서버에서 호출하는 클라이언트 메시지 이벤트 수신기 정의1
